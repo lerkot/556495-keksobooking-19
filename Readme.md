@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Валерия Жидких](https://up.htmlacademy.ru/javascript/19/user/556495).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Рубец](https://up.htmlacademy.ru/javascript/19/user/41580).
 
 ---
 
