@@ -54,12 +54,12 @@ var mapInActive = document.querySelector('.map--faded');
 mapInActive.classList.remove('map--faded');
 var mapPins = document.querySelector('.map__pins');
 
-var renderPin = function () {
+var renderPin = function (pin) {
   var pinElement = pinTemplate.cloneNode(true);
-  pinElement.querySelector('img').setAttribute('src', pins[i].author.avatar);
-  pinElement.querySelector('img').setAttribute('alt', pins[i].offer.title);
-  pinElement.style.left = (pins[i].location.x - 25) + 'px';
-  pinElement.style.top = (pins[i].location.y - 70) + 'px';
+  pinElement.querySelector('img').setAttribute('src', pin.author.avatar);
+  pinElement.querySelector('img').setAttribute('alt', pin.offer.title);
+  pinElement.style.left = (pin.location.x - 25) + 'px';
+  pinElement.style.top = (pin.location.y - 70) + 'px';
 
   return pinElement;
 };
