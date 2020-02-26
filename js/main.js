@@ -109,7 +109,7 @@ var getPins = function (count) {
   return result;
 };
 
-var data = getPins(8);
+getPins(8);
 
 var mapInActive = document.querySelector('.map--faded');
 mapInActive.classList.remove('map--faded');
@@ -118,5 +118,5 @@ var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pi
 for (var i = 0; i < 8; i++) {
   var pinElement = pinTemplate.cloneNode(true);
   mapPins.appendChild(pinElement);
-};
+}
 
