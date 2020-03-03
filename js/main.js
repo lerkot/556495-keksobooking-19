@@ -114,24 +114,28 @@ var mapFiltersContainer = document.querySelector('.map__filters-container');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
 
-var renderCard = function (cardDatum) {
+var getCard = function (cardDetails) {
   var cardElement = cardTemplate.cloneNode(true);
-  cardElement.querySelector('.popup__title').textContent = cardDatum.offer.title;
-  cardElement.querySelector('.popup__text--address').textContent = cardDatum.offer.address;
-  cardElement.querySelector('.popup__text--price').textContent = cardDatum.offer.price + '₽/ночь';
-  cardElement.querySelector('.popup__type').textContent = getHouseType(cardDatum.offer.type);
-  cardElement.querySelector('.popup__text--capacity').textContent = cardDatum.offer.rooms + ' комнаты для ' + cardDatum.offer.guests + ' гостей';
-  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + cardDatum.offer.checkin + ',' + ' выезд до' + cardDatum.offer.checkout;
-  cardElement.querySelector('.popup__description').textContent = cardDatum.offer.description;
-  cardElement.querySelector('.popup__avatar').src = cardDatum.author.avatar;
-
-
-  cardsContainer.insertBefore(cardElement, mapFiltersContainer);
+  cardElement.querySelector('.popup__title').textContent = cardDetails.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = cardDetails.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = cardDetails.offer.price + '₽/ночь';
+  cardElement.querySelector('.popup__type').textContent = getHouseType(cardDetails.offer.type);
+  cardElement.querySelector('.popup__text--capacity').textContent = cardDetails.offer.rooms + ' комнаты для ' + cardDetails.offer.guests + ' гостей';
+  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + cardDetails.offer.checkin + ',' + ' выезд до' + cardDetails.offer.checkout;
+  cardElement.querySelector('.popup__description').textContent = cardDetails.offer.description;
+  cardElement.querySelector('.popup__avatar').src = cardDetails.author.avatar;
 
   return cardElement;
 };
 
+var renderCard = function () {
+  var fragment = document.createDocumentFragment();
+  fragment.appendChild(getCard(pins[0]));
+  cardsContainer.insertBefore(fragment, mapFiltersContainer);
+};
+
 renderCard(pins[0]);
+
 
 var addPhotos = function () {
   var photosTemplate = document.querySelector('#card').content.querySelector('.popup__photo');
@@ -147,7 +151,7 @@ var addPhotos = function () {
 
 addPhotos(pins);
 
-
+/*
 var featuresList = document.querySelector('.popup__features');
 
 var removeEmptyElements = function () {
@@ -169,3 +173,5 @@ var addFeatures = function () {
 };
 
 addFeatures(pins);
+
+*/
