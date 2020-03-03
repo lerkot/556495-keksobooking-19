@@ -106,6 +106,7 @@ var pins = createPins(8);
 
 renderPins(pins);
 
+
 // Находим блок, куда будем вставлять наши карточки
 var cardsContainer = document.querySelector('.map');
 var mapFiltersContainer = document.querySelector('.map__filters-container');
@@ -124,6 +125,8 @@ var getCard = function (cardDetails) {
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + cardDetails.offer.checkin + ',' + ' выезд до' + cardDetails.offer.checkout;
   cardElement.querySelector('.popup__description').textContent = cardDetails.offer.description;
   cardElement.querySelector('.popup__avatar').src = cardDetails.author.avatar;
+  cardElement.querySelector('.popup__photos').src = cardDetails.offer.photos;
+  cardElement.querySelector('.popup__features').innerHTML = cardDetails.offer.features;
 
   return cardElement;
 };
@@ -135,7 +138,6 @@ var renderCard = function () {
 };
 
 renderCard(pins[0]);
-
 
 var addPhotos = function () {
   var photosTemplate = document.querySelector('#card').content.querySelector('.popup__photo');
@@ -151,7 +153,6 @@ var addPhotos = function () {
 
 addPhotos(pins);
 
-/*
 var featuresList = document.querySelector('.popup__features');
 
 var removeEmptyElements = function () {
@@ -163,7 +164,7 @@ var removeEmptyElements = function () {
 removeEmptyElements(featuresList);
 
 
-var addFeatures = function () {
+/* var addFeatures = function () {
   var featureElement = document.querySelector('#card').content.querySelector('.popup__feature');
   for (var i = 0; i < FEATURES.length; i++) {
     var featureItem = featureElement.cloneNode(true);
