@@ -7,22 +7,6 @@ var houseType = {
 };
 
 var TYPES = Object.keys(houseType);
-
-var getHouseType = function (type) {
-  var houseName = '';
-  if (type === 'flat') {
-    houseName = 'Квартира';
-  } else if (type === 'bungalo') {
-    houseName = 'Бунгало';
-  } else if (type === 'house') {
-    houseName = 'Дом';
-  } else if (type === 'palace') {
-    houseName = 'Дворец';
-  }
-  return houseName;
-};
-
-
 var CHECKIN = ['12:00', '13:00', '14:00'];
 var CHECKOUT = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -39,7 +23,6 @@ var createPin = function (i) {
   var prefix = i < 10 ? '0' : '';
   var x = getRandomInteger(0, 1200);
   var y = getRandomInteger(130, 630);
-  var randomPhotosLength = getRandomInteger(0, PHOTOS.length - 1);
 
   return {
     author: {
@@ -54,9 +37,9 @@ var createPin = function (i) {
       guests: getRandomInteger(1, 10),
       checkin: CHECKIN[getRandomInteger(0, CHECKIN.length - 1)],
       checkout: CHECKOUT[getRandomInteger(0, CHECKOUT.length - 1)],
-      features: FEATURES[getRandomInteger(0, FEATURES.length - 1)],
+      features: FEATURES.slice(0, getRandomInteger(0, FEATURES.length)),
       description: 'Some description ' + i,
-      photos: PHOTOS.slice(0, randomPhotosLength)
+      photos: PHOTOS.slice(0, getRandomInteger(0, PHOTOS.length))
     },
 
     location: {
@@ -114,7 +97,61 @@ var mapFiltersContainer = document.querySelector('.map__filters-container');
 // Находим шаблон, который мы будем копировать
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
+// Добавляем отображение типа жилья: Квартира для flat, Бунгало для bungalo, Дом для house, Дворец для palace.
+var getHouseType = function (type) {
+  var houseName = '';
+  if (type === 'flat') {
+    houseName = 'Квартира';
+  } else if (type === 'bungalo') {
+    houseName = 'Бунгало';
+  } else if (type === 'house') {
+    houseName = 'Дом';
+  } else if (type === 'palace') {
+    houseName = 'Дворец';
+  }
+  return houseName;
+};
 
+
+var removeEmptyElements = function (parent) {
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
+};
+
+
+var getFeatures = function (features, featuresList) {
+  removeEmptyElements(featuresList);
+
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < features.length; i++) {
+    var featureItem = document.createElement('li');
+    featureItem.className = 'popup__feature popup__feature--' + features[i];
+    fragment.append(featureItem);
+  }
+
+  return fragment;
+};
+
+var getPhotos = function (photos, photosList) {
+  removeEmptyElements(photosList);
+
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < photos.length; i++) {
+    var photoItem = document.createElement('img');
+    photoItem.classList.add('popup__photo');
+    photoItem.src = photos[i];
+    photoItem.alt = 'Фотография жилья';
+    photoItem.style.width = '45px';
+    photoItem.style.height = '40px';
+    fragment.append(photoItem);
+  }
+
+  return fragment;
+};
+
+
+// Функция для получения данных карточки
 var getCard = function (cardDetails) {
   var cardElement = cardTemplate.cloneNode(true);
   cardElement.querySelector('.popup__title').textContent = cardDetails.offer.title;
@@ -125,12 +162,22 @@ var getCard = function (cardDetails) {
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + cardDetails.offer.checkin + ',' + ' выезд до' + cardDetails.offer.checkout;
   cardElement.querySelector('.popup__description').textContent = cardDetails.offer.description;
   cardElement.querySelector('.popup__avatar').src = cardDetails.author.avatar;
-  cardElement.querySelector('.popup__photos').src = cardDetails.offer.photos;
-  cardElement.querySelector('.popup__features').innerHTML = cardDetails.offer.features;
+
+  var featuresList = cardElement.querySelector('.popup__features');
+  var photosList = cardElement.querySelector('.popup__photos');
+
+  var features = getFeatures(cardDetails.offer.features, featuresList);
+  featuresList.append(features);
+
+  getPhotos(cardDetails.offer.photos, photosList);
+
+  var photos = getPhotos(cardDetails.offer.photos, photosList);
+  photosList.append(photos);
 
   return cardElement;
 };
 
+// Функция отрисовки карточки
 var renderCard = function () {
   var fragment = document.createDocumentFragment();
   fragment.appendChild(getCard(pins[0]));
@@ -138,41 +185,3 @@ var renderCard = function () {
 };
 
 renderCard(pins[0]);
-
-var addPhotos = function () {
-  var photosTemplate = document.querySelector('#card').content.querySelector('.popup__photo');
-  var photoElement = document.querySelector('.popup__photo');
-  var photosContainer = document.querySelector('.popup__photos');
-  photosContainer.removeChild(photoElement);
-  for (var i = 0; i < PHOTOS.length; i++) {
-    var photoItem = photosTemplate.cloneNode(true);
-    photoItem.src = PHOTOS[i];
-    photosContainer.appendChild(photoItem);
-  }
-};
-
-addPhotos(pins);
-
-var featuresList = document.querySelector('.popup__features');
-
-var removeEmptyElements = function () {
-  while (featuresList.firstChild) {
-    featuresList.removeChild(featuresList.firstChild);
-  }
-};
-
-removeEmptyElements(featuresList);
-
-
-/* var addFeatures = function () {
-  var featureElement = document.querySelector('#card').content.querySelector('.popup__feature');
-  for (var i = 0; i < FEATURES.length; i++) {
-    var featureItem = featureElement.cloneNode(true);
-    featureItem.textContent = FEATURES[i];
-    featuresList.appendChild(featureItem);
-  }
-};
-
-addFeatures(pins);
-
-*/
