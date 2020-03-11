@@ -37,8 +37,8 @@ var createPin = function (i) {
       address: x + ', ' + y,
       price: getRandomInteger(5, 50000),
       type: TYPES[getRandomInteger(0, TYPES.length - 1)],
-      rooms: getRandomInteger(1, 10),
-      guests: getRandomInteger(1, 10),
+      rooms: getRandomInteger(1, 100),
+      guests: getRandomInteger(1, 3),
       checkin: CHECKIN[getRandomInteger(0, CHECKIN.length - 1)],
       checkout: CHECKOUT[getRandomInteger(0, CHECKOUT.length - 1)],
       features: FEATURES.slice(0, getRandomInteger(0, FEATURES.length)),
@@ -194,6 +194,7 @@ renderCard(pins[0]);
 // Добавляем функцию, которая делает все input и select неактивными в исходном состоянии
 var inputs = document.querySelectorAll('input');
 var selects = document.querySelectorAll('select');
+var adForm = document.querySelector('.ad-form');
 var adFormDisabled = document.querySelector('.ad-form--disabled');
 var mapFilters = document.querySelector('.map__filters');
 var mainPin = document.querySelector('.map__pin--main');
@@ -252,3 +253,23 @@ mainPin.addEventListener('keydown', function (evt) {
   }
 });
 
+
+var adRoomsQuantity = adForm.querySelector('#room_number');
+var adGuestsQuantity = adForm.querySelector('#capacity');
+
+var roomOrGuestHandler = function () {
+  if (adRoomsQuantity.value === 1) {
+    adGuestsQuantity.setCustomValidity('«для 1 гостя»');
+  } else if (adRoomsQuantity.value === 2) {
+    adGuestsQuantity.setCustomValidity('«для 2 гостей» или «для 1 гостя»');
+  } else if (adRoomsQuantity.value === 3) {
+    adGuestsQuantity.setCustomValidity('«для 3 гостей», «для 2 гостей» или «для 1 гостя»');
+  } else if (adRoomsQuantity.value === 100) {
+    adGuestsQuantity.setCustomValidity('«не для гостей»');
+  } else if (adRoomsQuantity.value === 0) {
+    adGuestsQuantity.setCustomValidity('выберите количество гостей');
+  }
+};
+
+adRoomsQuantity.addEventListener('change', roomOrGuestHandler);
+adGuestsQuantity.addEventListener('change', roomOrGuestHandler);
