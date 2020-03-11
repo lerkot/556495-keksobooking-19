@@ -256,18 +256,18 @@ mainPin.addEventListener('keydown', function (evt) {
 
 var adRoomsQuantity = adForm.querySelector('#room_number');
 var adGuestsQuantity = adForm.querySelector('#capacity');
+var selectedOption = adGuestsQuantity.querySelectorAll('option');
+selectedOption[0].removeAttribute('selected');
 
 var roomOrGuestHandler = function () {
-  if (adRoomsQuantity.value === 1) {
+  if (adRoomsQuantity.value === '1') {
     adGuestsQuantity.setCustomValidity('«для 1 гостя»');
-  } else if (adRoomsQuantity.value === 2) {
+  } else if (adRoomsQuantity.value === '2') {
     adGuestsQuantity.setCustomValidity('«для 2 гостей» или «для 1 гостя»');
-  } else if (adRoomsQuantity.value === 3) {
+  } else if (adRoomsQuantity.value === '3') {
     adGuestsQuantity.setCustomValidity('«для 3 гостей», «для 2 гостей» или «для 1 гостя»');
-  } else if (adRoomsQuantity.value === 100) {
+  } else if (adRoomsQuantity.value === '100') {
     adGuestsQuantity.setCustomValidity('«не для гостей»');
-  } else if (adRoomsQuantity.value === 0) {
-    adGuestsQuantity.setCustomValidity('выберите количество гостей');
   }
 };
 
