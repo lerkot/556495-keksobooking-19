@@ -195,6 +195,8 @@ renderCard(pins[0]);
 var inputs = document.querySelectorAll('input');
 var selects = document.querySelectorAll('select');
 var adForm = document.querySelector('.ad-form');
+var descField = adForm.querySelector('textarea');
+var buttonSubmit = adForm.querySelector('.ad-form__submit');
 var adFormDisabled = document.querySelector('.ad-form--disabled');
 var mapFilters = document.querySelector('.map__filters');
 var mainPin = document.querySelector('.map__pin--main');
@@ -207,6 +209,8 @@ var makeFormInactive = function () {
   for (var j = 0; j < selects.length; j++) {
     selects[j].setAttribute('disabled', '');
   }
+  descField.setAttribute('disabled', '');
+
 };
 
 makeFormInactive();
@@ -216,10 +220,14 @@ var makeFormActive = function () {
   for (var i = 0; i < inputs.length; i++) {
     inputs[i].removeAttribute('disabled', '');
   }
+
   for (var j = 0; j < selects.length; j++) {
     selects[j].removeAttribute('disabled', '');
   }
+
+  descField.removeAttribute('disabled', '');
 };
+
 
 var activatePage = function () {
   makeFormActive(adFormDisabled);
@@ -256,8 +264,11 @@ mainPin.addEventListener('keydown', function (evt) {
 
 var adRoomsQuantity = adForm.querySelector('#room_number');
 var adGuestsQuantity = adForm.querySelector('#capacity');
-var selectedOption = adGuestsQuantity.querySelectorAll('option');
-selectedOption[0].removeAttribute('selected');
+
+// Меняем количество гостей по умолчанию
+var options = adGuestsQuantity.options;
+options[2].selected = true;
+
 
 var roomOrGuestHandler = function () {
   if (adRoomsQuantity.value === '1') {
