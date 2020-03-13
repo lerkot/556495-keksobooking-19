@@ -90,7 +90,6 @@ var renderPins = function (pins) {
 
 var pins = createPins(8);
 
-/*
 // Находим блок, куда будем вставлять наши карточки
 var cardsContainer = document.querySelector('.map');
 var mapFiltersContainer = document.querySelector('.map__filters-container');
@@ -113,15 +112,12 @@ var getHouseType = function (type) {
   return houseName;
 };
 
-*/
 
-/*
 var removeEmptyElements = function (parent) {
   while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
   }
 };
-
 
 var getFeatures = function (features, featuresList) {
   removeEmptyElements(featuresList);
@@ -157,6 +153,8 @@ var getPhotos = function (photos, photosList) {
 // Функция для получения данных карточки
 var getCard = function (cardDetails) {
   var cardElement = cardTemplate.cloneNode(true);
+  cardElement.style.left = cardDetails.location.x + 'px';
+  cardElement.style.top = cardDetails.location.y + 'px';
   cardElement.querySelector('.popup__title').textContent = cardDetails.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = cardDetails.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = cardDetails.offer.price + '₽/ночь';
@@ -183,13 +181,12 @@ var getCard = function (cardDetails) {
 // Функция отрисовки карточки
 var renderCard = function () {
   var fragment = document.createDocumentFragment();
-  fragment.appendChild(getCard(pins[0]));
+  for (var i = 0; i < pins.length; i++) {
+    fragment.appendChild(getCard(pins[i]));
+  }
   cardsContainer.insertBefore(fragment, mapFiltersContainer);
 };
 
-renderCard(pins[0]);
-
-*/
 
 // Добавляем функцию, которая делает все input и select неактивными в исходном состоянии
 var inputs = document.querySelectorAll('input');
@@ -298,3 +295,12 @@ var roomOrGuestHandler = function () {
 
 adRoomsQuantity.addEventListener('change', roomOrGuestHandler);
 adGuestsQuantity.addEventListener('change', roomOrGuestHandler);
+
+var popupOpen = document.querySelectorAll('.map__pin');
+// var cardPopup = document.querySelectorAll('.popup');
+// var popupClose = document.querySelector('.popup__close');
+
+// Нажатие на элемент .map-pin приводит к отрисовке карточки popup
+popupOpen.addEventListener('click', function () {
+  renderCard(pins);
+});
