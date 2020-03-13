@@ -1,4 +1,8 @@
 'use strict';
+// var ESC_KEY = 'Escape';
+var ENTER_KEY = 'Enter';
+var LEFT_BUTTON = '0';
+
 var houseType = {
   flat: 'Квартира',
   palace: 'Дворец',
@@ -33,8 +37,8 @@ var createPin = function (i) {
       address: x + ', ' + y,
       price: getRandomInteger(5, 50000),
       type: TYPES[getRandomInteger(0, TYPES.length - 1)],
-      rooms: getRandomInteger(1, 10),
-      guests: getRandomInteger(1, 10),
+      rooms: getRandomInteger(1, 100),
+      guests: getRandomInteger(1, 3),
       checkin: CHECKIN[getRandomInteger(0, CHECKIN.length - 1)],
       checkout: CHECKOUT[getRandomInteger(0, CHECKOUT.length - 1)],
       features: FEATURES.slice(0, getRandomInteger(0, FEATURES.length)),
@@ -60,7 +64,6 @@ var createPins = function (count) {
 
 
 var mapInActive = document.querySelector('.map--faded');
-mapInActive.classList.remove('map--faded');
 var mapPins = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
@@ -87,9 +90,7 @@ var renderPins = function (pins) {
 
 var pins = createPins(8);
 
-renderPins(pins);
-
-
+/*
 // Находим блок, куда будем вставлять наши карточки
 var cardsContainer = document.querySelector('.map');
 var mapFiltersContainer = document.querySelector('.map__filters-container');
@@ -112,7 +113,9 @@ var getHouseType = function (type) {
   return houseName;
 };
 
+*/
 
+/*
 var removeEmptyElements = function (parent) {
   while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
@@ -185,3 +188,113 @@ var renderCard = function () {
 };
 
 renderCard(pins[0]);
+
+*/
+
+// Добавляем функцию, которая делает все input и select неактивными в исходном состоянии
+var inputs = document.querySelectorAll('input');
+var selects = document.querySelectorAll('select');
+var forms = document.querySelectorAll('form');
+var adForm = document.querySelector('.ad-form');
+var descField = adForm.querySelector('textarea');
+var buttonSubmit = adForm.querySelector('.ad-form__submit');
+var adFormDisabled = document.querySelector('.ad-form--disabled');
+var mapFilters = document.querySelector('.map__filters');
+var mainPin = document.querySelector('.map__pin--main');
+
+
+var makeFormInactive = function () {
+  buttonSubmit.setAttribute('disabled', '');
+
+  for (var k = 0; k < forms.length; k++) {
+    forms[k].setAttribute('disabled', '');
+  }
+
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].setAttribute('disabled', '');
+  }
+  for (var j = 0; j < selects.length; j++) {
+    selects[j].setAttribute('disabled', '');
+  }
+  descField.setAttribute('disabled', '');
+
+};
+
+makeFormInactive();
+
+// Делаем input и select активными
+var makeFormActive = function () {
+  buttonSubmit.removeAttribute('disabled', '');
+
+  for (var k = 0; k < forms.length; k++) {
+    forms[k].removeAttribute('disabled', '');
+  }
+  for (var i = 0; i < inputs.length; i++) {
+    inputs[i].removeAttribute('disabled', '');
+  }
+
+  for (var j = 0; j < selects.length; j++) {
+    selects[j].removeAttribute('disabled', '');
+  }
+
+  descField.removeAttribute('disabled', '');
+};
+
+
+var activatePage = function () {
+  makeFormActive(adFormDisabled);
+  makeFormActive(mapFilters);
+  mapInActive.classList.remove('map--faded');
+  adFormDisabled.classList.remove('ad-form--disabled');
+  renderPins(pins);
+};
+
+
+// Проверяем, что нажата левая кнопка мыши и активируем страницу
+var checkMouseButton = function (evt) {
+  if (typeof evt === 'object') {
+    switch (evt.button) {
+      case LEFT_BUTTON:
+        activatePage();
+    }
+  }
+};
+
+checkMouseButton();
+
+// Вешаем обработчик на главный пин и активируем страницу при нажатии левой кнопки мыши
+mainPin.addEventListener('mousedown', function () {
+  activatePage();
+});
+
+mainPin.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_KEY) {
+    activatePage();
+  }
+});
+
+
+var adRoomsQuantity = adForm.querySelector('#room_number');
+var adGuestsQuantity = adForm.querySelector('#capacity');
+
+// Меняем количество гостей по умолчанию
+var options = adGuestsQuantity.options;
+options[2].selected = true;
+
+
+var roomOrGuestHandler = function () {
+  if (adRoomsQuantity.value === '1' && adGuestsQuantity.value !== '1') {
+    adGuestsQuantity.setCustomValidity('«для 1 гостя»');
+  } else if (adRoomsQuantity.value === '2' && (adGuestsQuantity.value < 1 || adGuestsQuantity.value > 2)) {
+    adGuestsQuantity.setCustomValidity('«для 2 гостей» или «для 1 гостя»');
+  } else if (adRoomsQuantity.value === '3' && (adGuestsQuantity.value < 1 || adGuestsQuantity.value > 3)) {
+    adGuestsQuantity.setCustomValidity('«для 3 гостей», «для 2 гостей» или «для 1 гостя»');
+  } else if (adRoomsQuantity.value === '100' && adGuestsQuantity.value !== '0') {
+    adGuestsQuantity.setCustomValidity('«не для гостей»');
+  } else {
+    adGuestsQuantity.setCustomValidity('');
+  }
+};
+
+adRoomsQuantity.addEventListener('change', roomOrGuestHandler);
+adGuestsQuantity.addEventListener('change', roomOrGuestHandler);
