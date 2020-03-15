@@ -153,8 +153,6 @@ var getPhotos = function (photos, photosList) {
 // Функция для получения данных карточки
 var getCard = function (cardDetails) {
   var cardElement = cardTemplate.cloneNode(true);
-  cardElement.style.left = cardDetails.location.x + 'px';
-  cardElement.style.top = cardDetails.location.y + 'px';
   cardElement.querySelector('.popup__title').textContent = cardDetails.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = cardDetails.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = cardDetails.offer.price + '₽/ночь';
@@ -178,6 +176,7 @@ var getCard = function (cardDetails) {
   return cardElement;
 };
 
+
 // Функция отрисовки карточки
 var renderCard = function () {
   var fragment = document.createDocumentFragment();
@@ -187,6 +186,7 @@ var renderCard = function () {
   cardsContainer.insertBefore(fragment, mapFiltersContainer);
 };
 
+renderCard(pins);
 
 // Добавляем функцию, которая делает все input и select неактивными в исходном состоянии
 var inputs = document.querySelectorAll('input');
@@ -296,11 +296,102 @@ var roomOrGuestHandler = function () {
 adRoomsQuantity.addEventListener('change', roomOrGuestHandler);
 adGuestsQuantity.addEventListener('change', roomOrGuestHandler);
 
-var popupOpen = document.querySelectorAll('.map__pin');
-// var cardPopup = document.querySelectorAll('.popup');
-// var popupClose = document.querySelector('.popup__close');
 
-// Нажатие на элемент .map-pin приводит к отрисовке карточки popup
-popupOpen.addEventListener('click', function () {
-  renderCard(pins);
+// Валидация поля «Заголовок объявления»
+var MIN_DESC_LENGTH = 30;
+var titleInput = adForm.querySelector('#title');
+titleInput.setAttribute('required', '');
+titleInput.setAttribute('minlength', '30');
+titleInput.setAttribute('maxlength', '100');
+
+titleInput.addEventListener('invalid', function () {
+  if (titleInput.validity.tooShort) {
+    titleInput.setCustomValidity('Заголовок должен состоять минимум из 30 символов');
+  } else if (titleInput.validity.tooLong) {
+    titleInput.setCustomValidity('Длина заголовка не должна превышать 100 символов');
+  } else if (titleInput.validity.valueMissing) {
+    titleInput.setCustomValidity('Добавьте заголовок');
+  } else {
+    titleInput.setCustomValidity('');
+  }
 });
+
+
+titleInput.addEventListener('input', function (evt) {
+  var target = evt.target;
+  if (target.value.length < MIN_DESC_LENGTH) {
+    target.setCustomValidity('Заголовок должен состоять минимум из ' + MIN_DESC_LENGTH + ' символов');
+  } else {
+    target.setCustomValidity('');
+  }
+});
+
+
+// Валидация полей «Тип жилья» и Цена за ночь
+var priceInput = adForm.querySelector('#price');
+priceInput.setAttribute('required', '');
+priceInput.setAttribute('max', '1000000');
+priceInput.setAttribute('min', '0');
+var accomodationType = adForm.querySelector('#type');
+var minPrice = {
+  'bungalo': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000
+};
+
+var priceHandler = function () {
+  var min = parseInt(priceInput.min, 10);
+  var max = parseInt(priceInput.max, 10);
+  if (priceInput.value < min) {
+    priceInput.setCustomValidity('Минимальная стоимость - ' + min);
+  } else if (priceInput.value > max) {
+    priceInput.setCustomValidity('Максимальная стоимость - ' + max);
+  } else if (priceInput.validity.valueMissing) {
+    priceInput.setCustomValidity('Укажите стоимость');
+  } else {
+    priceInput.setCustomValidity('');
+  }
+};
+
+var showMinPrice = function () {
+  priceInput.min = minPrice[accomodationType.value];
+  priceInput.placeholder = minPrice[accomodationType.value];
+};
+
+var accomodationTypeHandler = function () {
+  priceHandler();
+  showMinPrice();
+};
+
+priceInput.addEventListener('change', accomodationTypeHandler);
+accomodationType.addEventListener('change', accomodationTypeHandler);
+
+// Валидация поля «Адрес» (с координатами пока не работала)
+var address = adForm.querySelector('#address');
+address.setAttribute('required', '');
+address.setAttribute('readonly', '');
+address.value = mainPin.style.left + ' ,' + mainPin.style.top;
+
+
+// Валидация полей «Время заезда» и «Время выезда»
+var checkinTime = adForm.querySelector('#timein');
+var checkoutTime = adForm.querySelector('#timeout');
+var timeHandler = function (evt) {
+  if (evt.target === checkinTime) {
+    checkoutTime.value = checkinTime.value;
+  } else if (evt.target === checkoutTime) {
+    checkinTime.value = checkoutTime.value;
+  }
+};
+
+checkinTime.addEventListener('change', timeHandler);
+checkoutTime.addEventListener('change', timeHandler);
+
+
+// Валидация полей «Ваша фотография» и «Фотография жилья»
+var uploadAvatar = adForm.querySelector('#avatar');
+var uploadPhotos = adForm.querySelector('#images');
+uploadAvatar.setAttribute('accept', 'image/png, image/jpeg');
+uploadPhotos.setAttribute('accept', 'image/png, image/jpeg');
+
