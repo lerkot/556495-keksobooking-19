@@ -427,3 +427,4 @@ var uploadAvatar = adForm.querySelector('#avatar');
 var uploadPhotos = adForm.querySelector('#images');
 uploadAvatar.setAttribute('accept', 'image/png, image/jpeg');
 uploadPhotos.setAttribute('accept', 'image/png, image/jpeg');
+
