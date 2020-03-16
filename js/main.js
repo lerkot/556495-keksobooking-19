@@ -1,5 +1,5 @@
 'use strict';
-// var ESC_KEY = 'Escape';
+var ESC_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
 var LEFT_BUTTON = '0';
 
@@ -74,6 +74,20 @@ var getPin = function (pin) {
   pinElement.querySelector('img').setAttribute('alt', pin.offer.title);
   pinElement.style.left = (pin.location.x - 25) + 'px';
   pinElement.style.top = (pin.location.y - 70) + 'px';
+
+  var renderCard = function () {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < pins.length; i++) {
+      pinElement.setAttribute('data-id', i);
+      fragment.appendChild(getCard(pins[i]));
+    }
+    cardsContainer.insertBefore(fragment, mapFiltersContainer);
+  };
+
+  pinElement.addEventListener('click', function (evt) {
+    var id = evt.currentTarget.getAttribute('data-id');
+    renderCard(pins[id]);
+  });
 
   return pinElement;
 };
@@ -153,6 +167,7 @@ var getPhotos = function (photos, photosList) {
 // Функция для получения данных карточки
 var getCard = function (cardDetails) {
   var cardElement = cardTemplate.cloneNode(true);
+  var cardClose = cardElement.querySelector('.popup__close');
   cardElement.querySelector('.popup__title').textContent = cardDetails.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = cardDetails.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = cardDetails.offer.price + '₽/ночь';
@@ -173,10 +188,27 @@ var getCard = function (cardDetails) {
   var photos = getPhotos(cardDetails.offer.photos, photosList);
   photosList.append(photos);
 
+  cardClose.addEventListener('click', function () {
+    cardElement.remove();
+  });
+
+  cardClose.addEventListener('keydown', function (evt) {
+    if (evt.key === ENTER_KEY) {
+      cardElement.remove();
+    }
+  });
+
+  document.addEventListener('keydown', function (evt) {
+    if (evt.key === ESC_KEY) {
+      cardElement.remove();
+    }
+  });
+
   return cardElement;
 };
 
 
+/*
 // Функция отрисовки карточки
 var renderCard = function () {
   var fragment = document.createDocumentFragment();
@@ -187,6 +219,7 @@ var renderCard = function () {
 };
 
 renderCard(pins);
+*/
 
 // Добавляем функцию, которая делает все input и select неактивными в исходном состоянии
 var inputs = document.querySelectorAll('input');
@@ -394,4 +427,3 @@ var uploadAvatar = adForm.querySelector('#avatar');
 var uploadPhotos = adForm.querySelector('#images');
 uploadAvatar.setAttribute('accept', 'image/png, image/jpeg');
 uploadPhotos.setAttribute('accept', 'image/png, image/jpeg');
-
