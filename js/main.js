@@ -68,25 +68,26 @@ var mapPins = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
 // Функция, получающая конкретный пин
-var getPin = function (pin) {
+var getPin = function (pin, i) {
   var pinElement = pinTemplate.cloneNode(true);
   pinElement.querySelector('img').setAttribute('src', pin.author.avatar);
   pinElement.querySelector('img').setAttribute('alt', pin.offer.title);
   pinElement.style.left = (pin.location.x - 25) + 'px';
   pinElement.style.top = (pin.location.y - 70) + 'px';
-
-  var renderCard = function () {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < pins.length; i++) {
-      pinElement.setAttribute('data-id', i);
-      fragment.appendChild(getCard(pins[i]));
-    }
-    cardsContainer.insertBefore(fragment, mapFiltersContainer);
-  };
+  pinElement.setAttribute('data-id', i);
 
   pinElement.addEventListener('click', function (evt) {
     var id = evt.currentTarget.getAttribute('data-id');
     renderCard(pins[id]);
+  });
+
+
+  pinElement.addEventListener('keydown', function (evt) {
+    if (evt.key === ENTER_KEY) {
+      var id = evt.currentTarget.getAttribute('data-id');
+      renderCard(pins[id]);
+    }
+
   });
 
   return pinElement;
@@ -97,7 +98,7 @@ var getPin = function (pin) {
 var renderPins = function (pins) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < pins.length; i++) {
-    fragment.appendChild(getPin(pins[i]));
+    fragment.appendChild(getPin(pins[i], i));
   }
   mapPins.appendChild(fragment);
 };
@@ -188,6 +189,7 @@ var getCard = function (cardDetails) {
   var photos = getPhotos(cardDetails.offer.photos, photosList);
   photosList.append(photos);
 
+
   cardClose.addEventListener('click', function () {
     cardElement.remove();
   });
@@ -207,19 +209,22 @@ var getCard = function (cardDetails) {
   return cardElement;
 };
 
-
-/*
-// Функция отрисовки карточки
-var renderCard = function () {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < pins.length; i++) {
-    fragment.appendChild(getCard(pins[i]));
+var removeCard = function () {
+  var popupCard = document.querySelector('.map__card.popup');
+  if (popupCard) {
+    popupCard.remove();
   }
+};
+
+
+// Функция отрисовки карточки
+var renderCard = function (card) {
+  var fragment = document.createDocumentFragment();
+  fragment.appendChild(getCard(card));
+  removeCard();
   cardsContainer.insertBefore(fragment, mapFiltersContainer);
 };
 
-renderCard(pins);
-*/
 
 // Добавляем функцию, которая делает все input и select неактивными в исходном состоянии
 var inputs = document.querySelectorAll('input');
@@ -252,6 +257,7 @@ var makeFormInactive = function () {
 
 makeFormInactive();
 
+
 // Делаем input и select активными
 var makeFormActive = function () {
   buttonSubmit.removeAttribute('disabled', '');
@@ -279,11 +285,10 @@ var activatePage = function () {
   renderPins(pins);
 };
 
-
 // Проверяем, что нажата левая кнопка мыши и активируем страницу
 var checkMouseButton = function (evt) {
   if (typeof evt === 'object') {
-    switch (evt.button) {
+    switch (evt.mainPin) {
       case LEFT_BUTTON:
         activatePage();
     }
@@ -303,7 +308,7 @@ mainPin.addEventListener('keydown', function (evt) {
   }
 });
 
-
+// Валидация
 var adRoomsQuantity = adForm.querySelector('#room_number');
 var adGuestsQuantity = adForm.querySelector('#capacity');
 
@@ -427,4 +432,3 @@ var uploadAvatar = adForm.querySelector('#avatar');
 var uploadPhotos = adForm.querySelector('#images');
 uploadAvatar.setAttribute('accept', 'image/png, image/jpeg');
 uploadPhotos.setAttribute('accept', 'image/png, image/jpeg');
-
