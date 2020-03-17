@@ -237,7 +237,7 @@ var adFormDisabled = document.querySelector('.ad-form--disabled');
 var mapFilters = document.querySelector('.map__filters');
 var mainPin = document.querySelector('.map__pin--main');
 
-
+// делает селекты, формы, инпуты неактивными
 var makeFormInactive = function () {
   buttonSubmit.setAttribute('disabled', '');
 
@@ -276,7 +276,7 @@ var makeFormActive = function () {
   descField.removeAttribute('disabled', '');
 };
 
-
+// функция активации страницы
 var activatePage = function () {
   makeFormActive(adFormDisabled);
   makeFormActive(mapFilters);
