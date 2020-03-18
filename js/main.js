@@ -1,7 +1,7 @@
 'use strict';
 var ESC_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
-var LEFT_BUTTON = '0';
+// var LEFT_BUTTON = 0;
 
 var houseType = {
   flat: 'Квартира',
@@ -285,25 +285,24 @@ var activatePage = function () {
   renderPins(pins);
 };
 
-// Проверяем, что нажата левая кнопка мыши и активируем страницу
-var checkMouseButton = function (evt) {
-  if (typeof evt === 'object') {
-    switch (evt.mainPin) {
-      case LEFT_BUTTON:
-        activatePage();
-    }
+
+var isActive = false;
+
+mainPin.addEventListener('mousedown', function (evt) {
+  if (isActive) {
+    return;
+  } if (evt.which === 1) {
+    isActive = true;
+    activatePage();
   }
-};
-
-checkMouseButton();
-
-// Вешаем обработчик на главный пин и активируем страницу при нажатии левой кнопки мыши
-mainPin.addEventListener('mousedown', function () {
-  activatePage();
 });
 
 mainPin.addEventListener('keydown', function (evt) {
+  if (isActive) {
+    return;
+  }
   if (evt.key === ENTER_KEY) {
+    isActive = true;
     activatePage();
   }
 });
@@ -369,8 +368,9 @@ titleInput.addEventListener('input', function (evt) {
 var priceInput = adForm.querySelector('#price');
 priceInput.setAttribute('required', '');
 priceInput.setAttribute('max', '1000000');
-priceInput.setAttribute('min', '0');
+priceInput.setAttribute('placeholder', '1000');
 var accomodationType = adForm.querySelector('#type');
+
 var minPrice = {
   'bungalo': 0,
   'flat': 1000,
@@ -378,18 +378,8 @@ var minPrice = {
   'palace': 10000
 };
 
-var priceHandler = function () {
-  var min = parseInt(priceInput.min, 10);
-  var max = parseInt(priceInput.max, 10);
-  if (priceInput.value < min) {
-    priceInput.setCustomValidity('Минимальная стоимость - ' + min);
-  } else if (priceInput.value > max) {
-    priceInput.setCustomValidity('Максимальная стоимость - ' + max);
-  } else if (priceInput.validity.valueMissing) {
-    priceInput.setCustomValidity('Укажите стоимость');
-  } else {
-    priceInput.setCustomValidity('');
-  }
+var priceHandler = function (evt) {
+  priceInput.setAttribute('min', minPrice[evt.target.value]);
 };
 
 var showMinPrice = function () {
@@ -397,8 +387,8 @@ var showMinPrice = function () {
   priceInput.placeholder = minPrice[accomodationType.value];
 };
 
-var accomodationTypeHandler = function () {
-  priceHandler();
+var accomodationTypeHandler = function (evt) {
+  priceHandler(evt);
   showMinPrice();
 };
 
