@@ -1,7 +1,14 @@
 'use strict';
 var ESC_KEY = 'Escape';
 var ENTER_KEY = 'Enter';
-// var LEFT_BUTTON = 0;
+var PIN_HEIGHT = 50;
+var MAIN_PIN_HEIGHT = 156;
+var MAIN_PIN_WIDTH = 156;
+var PIN_WIDTH = 70;
+var TITLE_MIN_LENGHT = 30;
+var TITLE_MAX_LENGHT = 100;
+var MIN_PRICE = 1000;
+var MAX_PRICE = 1000000;
 
 var houseType = {
   flat: 'Квартира',
@@ -72,22 +79,13 @@ var getPin = function (pin, i) {
   var pinElement = pinTemplate.cloneNode(true);
   pinElement.querySelector('img').setAttribute('src', pin.author.avatar);
   pinElement.querySelector('img').setAttribute('alt', pin.offer.title);
-  pinElement.style.left = (pin.location.x - 25) + 'px';
-  pinElement.style.top = (pin.location.y - 70) + 'px';
+  pinElement.style.left = (pin.location.x - PIN_HEIGHT / 2) + 'px';
+  pinElement.style.top = (pin.location.y - PIN_WIDTH) + 'px';
   pinElement.setAttribute('data-id', i);
 
   pinElement.addEventListener('click', function (evt) {
     var id = evt.currentTarget.getAttribute('data-id');
     renderCard(pins[id]);
-  });
-
-
-  pinElement.addEventListener('keydown', function (evt) {
-    if (evt.key === ENTER_KEY) {
-      var id = evt.currentTarget.getAttribute('data-id');
-      renderCard(pins[id]);
-    }
-
   });
 
   return pinElement;
@@ -252,7 +250,6 @@ var makeFormInactive = function () {
     selects[j].setAttribute('disabled', '');
   }
   descField.setAttribute('disabled', '');
-
 };
 
 makeFormInactive();
@@ -291,7 +288,9 @@ var isActive = false;
 mainPin.addEventListener('mousedown', function (evt) {
   if (isActive) {
     return;
-  } if (evt.which === 1) {
+  }
+
+  if (evt.which === 1) {
     isActive = true;
     activatePage();
   }
@@ -335,11 +334,10 @@ adGuestsQuantity.addEventListener('change', roomOrGuestHandler);
 
 
 // Валидация поля «Заголовок объявления»
-var MIN_DESC_LENGTH = 30;
 var titleInput = adForm.querySelector('#title');
 titleInput.setAttribute('required', '');
-titleInput.setAttribute('minlength', '30');
-titleInput.setAttribute('maxlength', '100');
+titleInput.setAttribute('minlength', TITLE_MIN_LENGHT);
+titleInput.setAttribute('maxlength', TITLE_MAX_LENGHT);
 
 titleInput.addEventListener('invalid', function () {
   if (titleInput.validity.tooShort) {
@@ -356,8 +354,8 @@ titleInput.addEventListener('invalid', function () {
 
 titleInput.addEventListener('input', function (evt) {
   var target = evt.target;
-  if (target.value.length < MIN_DESC_LENGTH) {
-    target.setCustomValidity('Заголовок должен состоять минимум из ' + MIN_DESC_LENGTH + ' символов');
+  if (target.value.length < TITLE_MIN_LENGHT) {
+    target.setCustomValidity('Заголовок должен состоять минимум из ' + TITLE_MIN_LENGHT + ' символов');
   } else {
     target.setCustomValidity('');
   }
@@ -367,8 +365,8 @@ titleInput.addEventListener('input', function (evt) {
 // Валидация полей «Тип жилья» и Цена за ночь
 var priceInput = adForm.querySelector('#price');
 priceInput.setAttribute('required', '');
-priceInput.setAttribute('max', '1000000');
-priceInput.setAttribute('placeholder', '1000');
+priceInput.setAttribute('max', MAX_PRICE);
+priceInput.setAttribute('placeholder', MIN_PRICE);
 var accomodationType = adForm.querySelector('#type');
 
 var minPrice = {
@@ -395,11 +393,17 @@ var accomodationTypeHandler = function (evt) {
 priceInput.addEventListener('change', accomodationTypeHandler);
 accomodationType.addEventListener('change', accomodationTypeHandler);
 
-// Валидация поля «Адрес» (с координатами пока не работала)
+// Валидация поля «Адрес»
 var address = adForm.querySelector('#address');
 address.setAttribute('required', '');
 address.setAttribute('readonly', '');
-address.value = mainPin.style.left + ' ,' + mainPin.style.top;
+var getMainPinAdr = function (pin) {
+  var x = pin.offsetLeft + MAIN_PIN_WIDTH / 2;
+  var y = pin.offsetTop + MAIN_PIN_HEIGHT;
+  address.value = x + ', ' + y;
+};
+
+getMainPinAdr(mainPin);
 
 
 // Валидация полей «Время заезда» и «Время выезда»
