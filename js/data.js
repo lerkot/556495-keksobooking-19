@@ -61,7 +61,8 @@
   var pins = createPins(8);
 
   window.data = {
-    pins: pins
+    pins: pins,
+    houseType: houseType
   };
 
 })();

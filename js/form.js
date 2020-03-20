@@ -2,8 +2,14 @@
 (function () {
   var TITLE_MIN_LENGHT = 30;
   var TITLE_MAX_LENGHT = 100;
-  var MIN_PRICE = 1000;
   var MAX_PRICE = 1000000;
+  var MIN_PRICE = {
+    'bungalo': 0,
+    'flat': 1000,
+    'house': 5000,
+    'palace': 10000
+  };
+
   var mainPin = document.querySelector('.map__pin--main');
   var adForm = document.querySelector('.ad-form');
   var adRoomsQuantity = adForm.querySelector('#room_number');
@@ -63,23 +69,16 @@
   var priceInput = adForm.querySelector('#price');
   priceInput.setAttribute('required', '');
   priceInput.setAttribute('max', MAX_PRICE);
-  priceInput.setAttribute('placeholder', MIN_PRICE);
+  priceInput.setAttribute('placeholder', MIN_PRICE.flat);
   var accomodationType = adForm.querySelector('#type');
 
-  var minPrice = {
-    'bungalo': 0,
-    'flat': 1000,
-    'house': 5000,
-    'palace': 10000
-  };
-
   var priceHandler = function (evt) {
-    priceInput.setAttribute('min', minPrice[evt.target.value]);
+    priceInput.setAttribute('min', MIN_PRICE[evt.target.value]);
   };
 
   var showMinPrice = function () {
-    priceInput.min = minPrice[accomodationType.value];
-    priceInput.placeholder = minPrice[accomodationType.value];
+    priceInput.min = MIN_PRICE[accomodationType.value];
+    priceInput.placeholder = MIN_PRICE[accomodationType.value];
   };
 
   var accomodationTypeHandler = function (evt) {

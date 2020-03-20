@@ -1,23 +1,6 @@
 'use strict';
 (function () {
-
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-
-  // Добавляем отображение типа жилья: Квартира для flat, Бунгало для bungalo, Дом для house, Дворец для palace.
-  var getHouseType = function (type) {
-    var houseName = '';
-    if (type === 'flat') {
-      houseName = 'Квартира';
-    } else if (type === 'bungalo') {
-      houseName = 'Бунгало';
-    } else if (type === 'house') {
-      houseName = 'Дом';
-    } else if (type === 'palace') {
-      houseName = 'Дворец';
-    }
-    return houseName;
-  };
-
 
   var removeEmptyElements = function (parent) {
     while (parent.firstChild) {
@@ -61,7 +44,7 @@
     cardElement.querySelector('.popup__title').textContent = cardDetails.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = cardDetails.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = cardDetails.offer.price + '₽/ночь';
-    cardElement.querySelector('.popup__type').textContent = getHouseType(cardDetails.offer.type);
+    cardElement.querySelector('.popup__type').textContent = window.data.houseType[cardDetails.offer.type];
     cardElement.querySelector('.popup__text--capacity').textContent = cardDetails.offer.rooms + ' комнаты для ' + cardDetails.offer.guests + ' гостей';
     cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + cardDetails.offer.checkin + ',' + ' выезд до' + cardDetails.offer.checkout;
     cardElement.querySelector('.popup__description').textContent = cardDetails.offer.description;
