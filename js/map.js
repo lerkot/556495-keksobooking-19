@@ -80,7 +80,7 @@
   };
 
 
-  mainPin.addEventListener('mousedown', function (evt) {
+  mainPin.addEventListener('click', function (evt) {
     if (isActive) {
       return;
     }

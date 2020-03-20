@@ -96,7 +96,7 @@
   address.setAttribute('readonly', '');
   var getMainPinAdr = function (pin) {
     var x = pin.offsetLeft + window.utils.MAIN_PIN_WIDTH / 2;
-    var y = pin.offsetTop + window.utils.MAIN_PIN_HEIGHT;
+    var y = pin.offsetTop + window.utils.MAIN_PIN_HEIGHT / 2;
     address.value = x + ', ' + y;
   };
 
