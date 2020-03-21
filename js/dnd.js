@@ -26,6 +26,8 @@
 
       mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
       mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
+
+      window.form.set(mainPin);
     };
 
     var mouseUpHandler = function (upEvt) {
@@ -33,6 +35,7 @@
 
       document.removeEventListener('mousemove', mouseMoveHandler);
       document.removeEventListener('mouseup', mouseUpHandler);
+      window.form.set(mainPin);
     };
 
     document.addEventListener('mousemove', mouseMoveHandler);
