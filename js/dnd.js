@@ -1,5 +1,10 @@
 'use strict';
 (function () {
+  /* var  MIN_Y = 130;
+  var  MAX_Y = 630;
+  var  MIN_X = 0;
+  var  MAX_X = 1200;
+  */
   var mainPin = document.querySelector('.map__pin--main');
   mainPin.addEventListener('mousedown', function (evt) {
 
@@ -8,11 +13,8 @@
       y: evt.clientY
     };
 
-    // var dragged = false;
-
     var mouseMoveHandler = function (moveEvt) {
       moveEvt.preventDefault();
-      //  dragged = true;
 
       var shift = {
         x: startCoords.x - moveEvt.clientX,
