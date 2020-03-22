@@ -94,13 +94,12 @@
   address.setAttribute('required', '');
   address.setAttribute('readonly', '');
   var getMainPinAdr = function (pin) {
-    var x = pin.offsetLeft + window.utils.MAIN_PIN_WIDTH / 2;
-    var y = pin.offsetTop + window.utils.MAIN_PIN_HEIGHT / 2;
+    var x = Math.round(pin.offsetLeft + window.utils.MAIN_PIN_WIDTH / 2);
+    var y = Math.round(pin.offsetTop + window.utils.MAIN_PIN_HEIGHT / 2);
     address.value = x + ', ' + y;
   };
 
   getMainPinAdr(mainPin);
-
 
   // Валидация полей «Время заезда» и «Время выезда»
   var checkinTime = adForm.querySelector('#timein');

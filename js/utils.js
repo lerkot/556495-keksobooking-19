@@ -3,8 +3,8 @@
   var ESC_KEY = 'Escape';
   var ENTER_KEY = 'Enter';
   var PIN_HEIGHT = 50;
-  var MAIN_PIN_HEIGHT = 156;
-  var MAIN_PIN_WIDTH = 156;
+  var MAIN_PIN_HEIGHT = 87;
+  var MAIN_PIN_WIDTH = 65;
   var PIN_WIDTH = 70;
 
   window.utils = {
@@ -13,6 +13,6 @@
     PIN_HEIGHT: PIN_HEIGHT,
     PIN_WIDTH: PIN_WIDTH,
     MAIN_PIN_HEIGHT: MAIN_PIN_HEIGHT,
-    MAIN_PIN_WIDTH: MAIN_PIN_WIDTH
+    MAIN_PIN_WIDTH: MAIN_PIN_WIDTH,
   };
 })();
