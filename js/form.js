@@ -101,12 +101,6 @@
 
   getMainPinAdr(mainPin);
 
-  var setMainPinCurrentAdr = function (pin) {
-    var x = Math.round(pin.offsetLeft + window.utils.MAIN_PIN_WIDTH / 2);
-    var y = Math.round(pin.offsetTop + window.utils.MAIN_PIN_HEIGHT / 2);
-    address.value = x + ', ' + y;
-  };
-
   // Валидация полей «Время заезда» и «Время выезда»
   var checkinTime = adForm.querySelector('#timein');
   var checkoutTime = adForm.querySelector('#timeout');
@@ -128,7 +122,4 @@
   uploadAvatar.setAttribute('accept', 'image/png, image/jpeg');
   uploadPhotos.setAttribute('accept', 'image/png, image/jpeg');
 
-  window.form = {
-    set: setMainPinCurrentAdr
-  };
 })();
