@@ -18,10 +18,10 @@
 
 
   // Функция, отрисовывающая пины
-  var successHandler = function (pins) {
+  var successHandler = function () {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < MAX_PINS_AMOUNT; i++) {
-      fragment.appendChild(window.pin.get(pins[i], i));
+      fragment.appendChild(window.pin.get(window.data[i], i));
     }
     mapPins.appendChild(fragment);
   };

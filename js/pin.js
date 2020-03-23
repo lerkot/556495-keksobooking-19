@@ -12,7 +12,7 @@
 
     pinElement.addEventListener('click', function (evt) {
       var id = evt.currentTarget.getAttribute('data-id');
-      window.map.renderCard(window.data.pins[id]);
+      window.map.renderCard(window.data[id]);
     });
 
     return pinElement;
