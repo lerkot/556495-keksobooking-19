@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  var MAX_PINS_AMOUNT = 5;
   var mapInActive = document.querySelector('.map--faded');
   var mapPins = document.querySelector('.map__pins');
   var cardsContainer = document.querySelector('.map');
@@ -17,12 +18,23 @@
 
 
   // Функция, отрисовывающая пины
-  var renderPins = function (pins) {
+  var successHandler = function () {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < window.data.pins.length; i++) {
-      fragment.appendChild(window.pin.get(pins[i], i));
+    for (var i = 0; i < MAX_PINS_AMOUNT; i++) {
+      fragment.appendChild(window.pin.get(window.data[i], i));
     }
     mapPins.appendChild(fragment);
+  };
+
+  var errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
   };
 
   var renderCard = function (card) {
@@ -76,7 +88,7 @@
     makeFormActive(mapFilters);
     mapInActive.classList.remove('map--faded');
     adFormDisabled.classList.remove('ad-form--disabled');
-    renderPins(window.data.pins);
+    window.backend.loadData(successHandler, errorHandler);
   };
 
 
@@ -103,7 +115,6 @@
 
 
   window.map = {
-    renderPins: renderPins,
     renderCard: renderCard
   };
 })();

@@ -44,16 +44,18 @@
     cardElement.querySelector('.popup__title').textContent = cardDetails.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = cardDetails.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = cardDetails.offer.price + '₽/ночь';
-    cardElement.querySelector('.popup__type').textContent = window.data.houseType[cardDetails.offer.type];
+    cardElement.querySelector('.popup__type').textContent = window.utils.houseType[cardDetails.offer.type];
     cardElement.querySelector('.popup__text--capacity').textContent = cardDetails.offer.rooms + ' комнаты для ' + cardDetails.offer.guests + ' гостей';
-    cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + cardDetails.offer.checkin + ',' + ' выезд до' + cardDetails.offer.checkout;
+    cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + cardDetails.offer.checkin + ',' + ' выезд до ' + cardDetails.offer.checkout;
     cardElement.querySelector('.popup__description').textContent = cardDetails.offer.description;
     cardElement.querySelector('.popup__avatar').src = cardDetails.author.avatar;
+
 
     var featuresList = cardElement.querySelector('.popup__features');
     var photosList = cardElement.querySelector('.popup__photos');
 
     var features = getFeatures(cardDetails.offer.features, featuresList);
+
     featuresList.append(features);
 
     getPhotos(cardDetails.offer.photos, photosList);
