@@ -1,6 +1,10 @@
 'use strict';
 (function () {
-  var URL = 'https://js.dump.academy/keksobooking/data';
+  var URL = {
+    GET: 'https://js.dump.academy/keksobooking/data',
+    POST: 'https://js.dump.academy/keksobooking'
+  };
+
   var TIMEOUT_IN_MS = 10000;
 
   var StatusCode = {
@@ -22,10 +26,8 @@
     '503': 'Ошибка 503: Сервис недоступен'
   };
 
-  var loadData = function (successHandler, errorHandler) {
-    var xhr = new XMLHttpRequest();
+  var getServerResponse = function (xhr, successHandler, errorHandler) {
     xhr.responseType = 'json';
-
 
     xhr.addEventListener('load', function () {
       window.data = xhr.response;
@@ -56,6 +58,7 @@
         }
       }
     });
+
     xhr.addEventListener('error', function () {
       errorHandler('Произошла ошибка соединения');
     });
@@ -64,13 +67,25 @@
     });
 
     xhr.timeout = TIMEOUT_IN_MS;
+  };
 
-    xhr.open('GET', URL);
+  var loadData = function (successHandler, errorHandler) {
+    var xhr = new XMLHttpRequest();
+    getServerResponse(xhr, successHandler, errorHandler);
+    xhr.open('GET', URL.GET);
     xhr.send();
   };
 
+  var uploadData = function (data, successHandler, errorHandler) {
+    var xhr = new XMLHttpRequest();
+    getServerResponse(xhr, successHandler, errorHandler);
+    xhr.open('POST', URL.POST);
+    xhr.send(data);
+  };
+
   window.backend = {
-    loadData: loadData
+    loadData: loadData,
+    uploadData: uploadData
   };
 
 })();
