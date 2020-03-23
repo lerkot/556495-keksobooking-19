@@ -49,8 +49,6 @@
     cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + cardDetails.offer.checkin + ',' + ' выезд до ' + cardDetails.offer.checkout;
     cardElement.querySelector('.popup__description').textContent = cardDetails.offer.description;
     cardElement.querySelector('.popup__avatar').src = cardDetails.author.avatar;
-
-
     var featuresList = cardElement.querySelector('.popup__features');
     var photosList = cardElement.querySelector('.popup__photos');
 

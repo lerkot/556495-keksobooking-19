@@ -1,16 +1,11 @@
 'use strict';
 (function () {
   var MAX_PINS_AMOUNT = 5;
+  var adForm = document.querySelector('.ad-form');
   var mapInActive = document.querySelector('.map--faded');
   var mapPins = document.querySelector('.map__pins');
   var cardsContainer = document.querySelector('.map');
   var mapFiltersContainer = document.querySelector('.map__filters-container');
-  var inputs = document.querySelectorAll('input');
-  var selects = document.querySelectorAll('select');
-  var forms = document.querySelectorAll('form');
-  var adForm = document.querySelector('.ad-form');
-  var descField = adForm.querySelector('textarea');
-  var buttonSubmit = adForm.querySelector('.ad-form__submit');
   var adFormDisabled = document.querySelector('.ad-form--disabled');
   var mapFilters = document.querySelector('.map__filters');
   var mainPin = document.querySelector('.map__pin--main');
@@ -44,51 +39,25 @@
     cardsContainer.insertBefore(fragment, mapFiltersContainer);
   };
 
-  // делает селекты, формы, инпуты неактивными
-  var makeFormInactive = function () {
-    buttonSubmit.setAttribute('disabled', '');
-
-    for (var k = 0; k < forms.length; k++) {
-      forms[k].setAttribute('disabled', '');
-    }
-
-    for (var i = 0; i < inputs.length; i++) {
-      inputs[i].setAttribute('disabled', '');
-    }
-    for (var j = 0; j < selects.length; j++) {
-      selects[j].setAttribute('disabled', '');
-    }
-    descField.setAttribute('disabled', '');
-  };
-
-  makeFormInactive();
-
-
-  // Делаем input и select активными
-  var makeFormActive = function () {
-    buttonSubmit.removeAttribute('disabled', '');
-
-    for (var k = 0; k < forms.length; k++) {
-      forms[k].removeAttribute('disabled', '');
-    }
-    for (var i = 0; i < inputs.length; i++) {
-      inputs[i].removeAttribute('disabled', '');
-    }
-
-    for (var j = 0; j < selects.length; j++) {
-      selects[j].removeAttribute('disabled', '');
-    }
-
-    descField.removeAttribute('disabled', '');
-  };
-
   // функция активации страницы
   var activatePage = function () {
-    makeFormActive(adFormDisabled);
-    makeFormActive(mapFilters);
+    window.form.makeFormActive(adFormDisabled);
+    window.form.makeFormActive(mapFilters);
     mapInActive.classList.remove('map--faded');
     adFormDisabled.classList.remove('ad-form--disabled');
     window.backend.loadData(successHandler, errorHandler);
+  };
+
+  // функция дезактивации страницы
+  var disablePage = function () {
+    adForm.reset();
+    window.form.makeFormInactive(adFormDisabled);
+    window.form.makeFormInactive(mapFilters);
+    mapInActive.classList.add('map--faded');
+    adFormDisabled.classList.add('ad-form--disabled');
+    window.pin.remove();
+    window.card.remove();
+    window.form.getAddress(mainPin);
   };
 
 
@@ -115,6 +84,7 @@
 
 
   window.map = {
-    renderCard: renderCard
+    renderCard: renderCard,
+    disablePage: disablePage
   };
 })();
